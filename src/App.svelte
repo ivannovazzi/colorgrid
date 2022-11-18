@@ -1,14 +1,15 @@
 <script lang="ts">
   import Grid from './Grid/Grid.svelte';  
-  let cellCount = 10;
-  let cellSize = 10;
+  let cellSpacing = 1;
+  let cellSize = 30;
 </script>
 
 <main>
-  <input placeholder="Count" type="number" min={1} bind:value={cellCount} />
-  <input placeholder="Size" type="number" min={1} bind:value={cellSize} />
-  <br/>
-  <Grid cellCount={cellCount} cellSize={cellSize}/>
+  <div class="controls">
+    <input placeholder="Spacing" type="number" min={1} bind:value={cellSpacing} />
+    <input placeholder="Size" type="number" min={1} bind:value={cellSize} />
+  </div>
+  <Grid cellSpacing={cellSpacing} cellSize={cellSize}/>
 </main>
 
 <style>
@@ -17,5 +18,18 @@
     padding: 0;
     background-color: rgb(15, 27, 8);
     height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .controls {
+    position: absolute;
+    top: 100px;
+    margin: 0 auto;
+    left: 50%;
+    padding: 30px;
+    background: #fff9;
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
   }
 </style>

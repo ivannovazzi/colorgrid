@@ -8,7 +8,7 @@
   }
 
   class Counter {
-    count = 50;
+    count = 10;
     ended = false;
     decrement() {
       this.count -= 1;
@@ -54,12 +54,9 @@
     }
   }
 
-  export let cellSize: number;
-  export let cellCount: number;
 
-  function makeRows(count: number) {
-    return Array.from({ length: count }, () => Array.from({ length: count }, () => new Cell()));
-  }
+  export let cellSize: number;
+  export let cellSpacing: number;
 
   function run(cell: Cell) {
     window.requestAnimationFrame(() => {
@@ -76,18 +73,34 @@
     }
   }
 
-  function makeGridStyle(count: number) {
+  function makeGrid(countX: number, countY: number) {    
+    return Array.from({ length: countX }, () => Array.from({ length: countY }, () => new Cell()));
+  }
+  function makeGridStyle(countX: number, countY: number, spacing: number) {
     return [
-      `grid-template-columns: repeat(${count}, 0fr)`,
-      `grid-template-rows: repeat(${count}, 0fr)`,
+      `grid-template-columns: repeat(${countX}, 0fr)`,
+      `grid-template-rows: repeat(${countY}, 0fr)`,
+      `row-gap: ${spacing}px`,
+      `column-gap: ${spacing}px`,
     ].join(";");
   }
 
-  $: rows = makeRows(cellCount);
-  $: gridStyle = makeGridStyle(cellCount);
+  
+  
+	$: innerHeight = 0;
+  $: innerWidth = 0;
+
+  $: countX = Math.floor((innerWidth + (cellSpacing)) / (cellSize + cellSpacing));
+  $: countY = Math.floor((innerHeight + (cellSpacing)) / (cellSize + cellSpacing));
+  $: rows = makeGrid(countX, countY);
+  $: gridStyle = makeGridStyle(countX, countY, cellSpacing);
   $: cellStyle = `width: ${cellSize}px; height: ${cellSize}px;`;
+
+  
+
 </script>
 
+<svelte:window bind:innerWidth bind:innerHeight />
 <div class="grid" style={gridStyle}>
   {#each rows as row}
     {#each row as col}
@@ -103,9 +116,6 @@
 <style>
   .grid {
     display: inline-grid;
-    row-gap: 2px;
-    column-gap: 2px;
-    margin: 0 auto;
   }
   .cell {
     width: 20px;
